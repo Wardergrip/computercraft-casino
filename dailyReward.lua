@@ -7,23 +7,6 @@ local refreshLowerWindow = 6.0;
 local refreshHigherWindow = 7.0;
 local refreshReset = 8.0;
 
-function WaitForDisk()
-    local isDiskPresent = false;
-    while true do
-        for i = 1, #cassapi.Directions do
-            if disk.isPresent(cassapi.Directions[i]) then
-                diskDirection = cassapi.Directions[i];
-                isDiskPresent = true;
-                break;
-            end
-        end
-        if isDiskPresent then
-            break;
-        end
-        sleep(1); -- Necessary to not overload it.
-    end
-end
-
 local dailyRedeemed = {};
 
 function Main()
@@ -51,7 +34,7 @@ function Main()
             term.setTextColor(colors.yellow);
             term.setCursorPos(1,1);
             print("Please insert a disk");
-            WaitForDisk();
+            diskDirection = cassapi.WaitForDisk();
             label = disk.getLabel(diskDirection);
             
             if label == nil then

@@ -20,35 +20,17 @@ function RegisterNewDisk(direction)
         end
     end
     disk.setLabel(direction,name);
-    local file = fs.open("disk/cassPass.data", "w");
-    cassapi.ConfigureCassPass(file,name);
-    file.close();
+    cassapi.ConfigureCassPass(name);
 end
 
 function Main()
-    
     local diskDirection = nil;
-    local isDiskPresent = false;
 
     term.clear();
     term.setTextColor(colors.red);
     print("Please insert blank disk to create a cassino pass");
 
-    while true do
-        
-        for i = 1, #cassapi.Directions do
-            if disk.isPresent(cassapi.Directions[i]) then
-                isDiskPresent = true;
-                diskDirection = cassapi.Directions[i];
-                break;
-            end
-        end
-        
-        if isDiskPresent then
-            break;
-        end
-        sleep(1); -- Necessary to not overload it.
-    end
+    diskDirection = cassapi.WaitForDisk();
 
     local label = disk.getLabel(diskDirection);
 
