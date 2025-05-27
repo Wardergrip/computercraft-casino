@@ -32,7 +32,7 @@ function AskForDisk()
     term.clear();
     term.setTextColor(colors.yellow);
     term.setCursorPos(1,1);
-    print("Please insert a disk");
+    print("Please insert a casspass disk");
 end
 
 function WaitForDisk()

@@ -30,10 +30,7 @@ function Main()
                 end
             end
 
-            term.clear();
-            term.setTextColor(colors.yellow);
-            term.setCursorPos(1,1);
-            print("Please insert a disk");
+            cassapi.AskForDisk();
             diskDirection = cassapi.WaitForDisk();
             label = disk.getLabel(diskDirection);
             
