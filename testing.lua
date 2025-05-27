@@ -6,6 +6,15 @@ function Echo()
     print(input)
 end
 
+function PrintSub()
+    print("PrintSub")
+    write("String?")
+    local str = read();
+    write("StartIdx?")
+    local idx = read();
+    print(string.sub(str,idx,string.len(str)));
+end
+
 function PrintCassPass()
     local file = fs.open("disk/cassPass.data", "r");
     local cassPassInfo = cassapi.ValidateCassPass(file);
@@ -20,7 +29,7 @@ function PrintCassPass()
 end
 
 function Main()
-    PrintCassPass();
+    PrintSub();
 end
 
 Main();
