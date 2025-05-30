@@ -5,6 +5,8 @@ NoOptions = {"n","no"};
 
 EmptyString = "";
 
+CassPassPath = "disk/cassPass.data";
+
 CurrentVersion = 0;
 
 NameIndex = 0;
@@ -60,7 +62,7 @@ end
 
 -- Open for write before calling
 function ConfigureCassPass(name)
-    local file = fs.open("disk/cassPass.data", "w");
+    local file = fs.open(CassPassPath, "w");
     file.write("v" .. CurrentVersion .. "\n");
     file.write("CASSPASS#");
     file.write(name);
@@ -71,7 +73,7 @@ function ConfigureCassPass(name)
 end
 
 function ValidateCassPass()
-    local file = fs.open("disk/cassPass.data", "r");
+    local file = fs.open(CassPassPath, "r");
     -- Make sure the file has the amount of lines we expect
     local versionText = file.readLine();
     if versionText == nil then
@@ -138,7 +140,7 @@ function AddCredits(cassPassInfo, amount)
 end
 
 function SaveToDisk(cassPassInfo)
-    local file = fs.open("disk/cassPass.data", "w");
+    local file = fs.open(CassPassPath, "w");
     file.write("v" .. CurrentVersion .. "\n");
     file.write("CASSPASS#" .. cassPassInfo[NameIndex]);
     file.write("\n");
