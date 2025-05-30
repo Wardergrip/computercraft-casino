@@ -43,9 +43,7 @@ function Main()
                 sleep(5);
                 goto continue;
             end
-            local file = fs.open("disk/cassPass.data", "r");
-            cassPassInfo = cassapi.ValidateCassPass(file);
-            file.close();
+            cassPassInfo = cassapi.ValidateCassPass();
             if cassPassInfo == nil then
                 disk.eject(diskDirection);
                 term.clear();
