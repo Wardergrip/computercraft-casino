@@ -41,9 +41,9 @@ function WaitForDisk()
     local isDiskPresent = false;
     local diskDirection = EmptyString;
     while true do
-        for i = 1, #cassapi.Directions do
-            if disk.isPresent(cassapi.Directions[i]) then
-                diskDirection = cassapi.Directions[i];
+        for i = 1, #Directions do
+            if disk.isPresent(Directions[i]) then
+                diskDirection = Directions[i];
                 isDiskPresent = true;
                 break;
             end

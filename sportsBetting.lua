@@ -6,7 +6,36 @@ UserPrefix = "#";
 
 LoadedCassPassInfo = nil;
 
-function GetPrompts()
+local function ExtractPromptAuthors(prompts)
+    local usernames = {}
+    for _, prompt in ipairs(prompts) do
+        local firstAt = string.find(prompt, "@", 1, true)
+        local secondAt = string.find(prompt, "@", firstAt + 1, true)
+        if firstAt and secondAt then
+            local username = string.sub(prompt, firstAt + 1, secondAt - 1)
+            table.insert(usernames, username)
+        else
+            table.insert(usernames, nil)
+        end
+    end
+    return usernames
+end
+
+local function ExtractFormattedPrompts(prompts)
+    local contents = {}
+    for _, prompt in ipairs(prompts) do
+        local secondAt = string.find(prompt, "@", string.find(prompt, "@", 1, true) + 1, true)
+        if secondAt then
+            local content = string.sub(prompt, secondAt + 1)
+            table.insert(contents, content)
+        else
+            table.insert(contents, nil)
+        end
+    end
+    return contents
+end
+
+function GetPromptsRaw()
     local exists = fs.exists(PromptPath);
     if exists == false or exists == nil then
         return nil;
@@ -17,7 +46,7 @@ function GetPrompts()
     while line ~= nil do
         local token = string.sub(line,1,1);
         if token == PromptPrefix then
-            table.insert(prompts, string.sub(line,2,string.len(line)));
+            table.insert(prompts, line);
         end
         line = file.readLine();
     end
@@ -84,8 +113,8 @@ function LoopFunc()
         sleep(5);
         return;
     else
-        local prompts = GetPrompts();
-        if prompts == nil then
+        local rawPrompts = GetPromptsRaw();
+        if rawPrompts == nil then
             local answer = nil;
             while answer == nil or answer == false do
                 term.clear();
@@ -98,7 +127,47 @@ function LoopFunc()
             end
             CreatePrompt();
         else
-            Crash(); -- If I hit this line all my code works for now
+            local answer = nil;
+            local prompts = {};
+            local users = {};
+            while answer == nil do
+                term.clear();
+                term.setTextColor(colors.yellow);
+                term.setCursorPos(1,1);
+                print("Current prompts:");
+                term.setTextColor(colors.lightBlue);
+                prompts = ExtractFormattedPrompts(rawPrompts);
+                users = ExtractPromptAuthors(rawPrompts);
+                for i, prompt in ipairs(prompts) do
+                    print("[" .. i .. "] " .. prompt .. "By " .. users[i]);
+                end
+                print(cassapi.EmptyString);
+                term.setTextColor(colors.yellow);
+                print("Reply Y to bet, reply N to make a prompt or fill in prompt result");
+                answer = cassapi.GetUserYesNo();
+            end
+
+            if answer == false then
+                local hasPrompt = false;
+                for i, user in ipairs(users) do
+                    if user == cassapi.GetCassPassName(LoadedCassPassInfo) then
+                        hasPrompt = true;
+                        break;
+                    end
+                end
+                if hasPrompt == false then
+                    CreatePrompt();
+                else
+                    -- TODO: Ask if user wants to set outcome or cancel
+                    -- If outcome, remove entry from prompts.data
+                    -- and write balances to balances.data
+                    -- TODO: handle balances.data
+                end
+            else
+                term.setTextColor(colors.yellow);
+                print("Enter the number you want to make a bet on");
+                -- TODO:
+            end
         end
     end
 end
@@ -106,6 +175,7 @@ end
 function Main()
     while true do
         LoopFunc();
+        sleep(1);
     end
 end
 
