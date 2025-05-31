@@ -76,9 +76,7 @@ function Main()
             ::continue::
         end
         cassapi.AddCredits(cassPassInfo, dailyReward);
-        local file = fs.open("disk/cassPass.data", "w");
-        cassapi.SaveToDisk(cassPassInfo, file);
-        file.close();
+        cassapi.SaveToDisk(cassPassInfo);
         table.insert(dailyRedeemed, label);
         label = nil;
         cassPassInfo = {};
