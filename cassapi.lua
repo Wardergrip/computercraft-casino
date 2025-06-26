@@ -60,7 +60,6 @@ function IsNullOrEmpty(s)
     return s == nil or s == EmptyString;
 end
 
--- Open for write before calling
 function ConfigureCassPass(name)
     local file = fs.open(CassPassPath, "w");
     file.write("v" .. CurrentVersion .. "\n");
