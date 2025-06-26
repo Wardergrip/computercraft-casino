@@ -79,6 +79,18 @@ function CreatePrompt()
     file.close();
 end
 
+function SetPromptOutcome(promptIndex)
+    local answer = nil;
+    while answer == nil do
+        term.clear();
+        term.setTextColor(colors.yellow);
+        term.setCursorPos(1,1);
+        print("Set the outcome of the prompt:")
+        answer = cassapi.GetUserYesNo();
+    end
+    -- TODO: Handle
+end
+
 function LoopFunc()
     cassapi.AskForDisk();
     local diskDirection = cassapi.WaitForDisk();
@@ -149,9 +161,11 @@ function LoopFunc()
 
             if answer == false then
                 local hasPrompt = false;
+                local promptIndex = -1;
                 for i, user in ipairs(users) do
                     if user == cassapi.GetCassPassName(LoadedCassPassInfo) then
                         hasPrompt = true;
+                        promptIndex = i;
                         break;
                     end
                 end
@@ -162,6 +176,17 @@ function LoopFunc()
                     -- If outcome, remove entry from prompts.data
                     -- and write balances to balances.data
                     -- TODO: handle balances.data
+                    answer = nil;
+                    while answer == nil do
+                        term.clear();
+                        term.setTextColor(colors.yellow);
+                        term.setCursorPos(1,1);
+                        print("Reply Y to register the outcome, reply N to cancel");
+                        answer = cassapi.GetUserYesNo();
+                    end
+                    if answer == true then
+                       SetPromptOutcome(promptIndex);
+                    end
                 end
             else
                 term.setTextColor(colors.yellow);
